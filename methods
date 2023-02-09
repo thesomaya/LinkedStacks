@@ -1,0 +1,321 @@
+import java.util.Scanner;
+
+class node 
+{
+    private int id;
+    private String name;
+    private double salary;
+    private node next;
+ 
+        public node (int d, String n, double s, node nex) 
+        // the node of the elements contains the id, name, salary and the address of the next element
+        {
+            id = d; 
+            name = n;
+            salary = s;
+            next = nex;
+        }   
+        
+        public int getId() // returns the id
+        {
+            return id;
+        }
+         public String getName () // returns the name
+        {
+            return name;
+        }
+        public double getSalary () // returns the salary
+        {
+            return salary;
+        }
+        public node getNext() // returns the address of the next element
+        {
+            return next;
+        }
+        
+        public void setId (int d) // sets the id 
+        {
+            id = d;
+        }
+        public void setName (String n) // sets the name
+        {
+            name = n;
+        }
+        public void setSalary (double s) // sets the salary
+        {
+            salary = s;
+        }
+        public void setNext (node nex) // sets the address to the next element 
+        {
+            next = nex;
+        }
+        
+        public void printData() // prints the data of an element
+        {
+            System.out.println("id = " + id);
+            System.out.println("name = " + name);
+            System.out.println("salary = " + salary);
+        }
+}
+
+class linkedStacks
+{
+    private node top;
+
+    public linkedStacks ()
+    {
+        top = null; // set node top to null 
+    }
+    
+    public boolean isEmpty () // check whether the list is empty
+    {
+        if (top == null)
+            return true;
+        else
+            return false;
+    }
+    
+    public void push (int d, String n, double s) // adds an element to the top
+    {
+        node temp = search (d); 
+        if (temp != null) 
+        {
+            System.out.println("\nThis ID already exists");
+            return;
+        }
+        temp = new node (d,n,s,top); 
+        top = temp;
+    }
+    
+    public void printNormal() // prints the list
+    {
+        if (isEmpty())
+        {
+            return;
+        }
+        node temp = top;
+        while (temp != null)
+        {
+            temp.printData();
+            temp = temp.getNext ();
+        }
+    }
+    
+    public void pop () // removes the first element 
+    {
+        if (isEmpty())
+        {
+            System.out.print("No elements");
+            return;
+        }
+        node temp = top; // set temp to top
+        top = top.getNext(); // let top be equal to the next element
+        temp.setNext(null);
+    }
+    
+    public void printReverse () // prints in reverse using recursion
+    {
+        printReverse (top); // calling the function 
+    }
+    public void printReverse(node temp)
+    {
+            if (temp == null)
+            return;
+        printReverse (temp.getNext()); // calling the function 
+        temp.printData(); // printing the data
+    }
+    
+    public boolean isSorted() // check whether the list is sorted
+    {
+        node temp = top;
+        while (temp.getNext() != null)
+        {
+            if ( temp.getId() > temp.getNext().getId()  ) // comparing the element with the next element
+            return false;
+            temp = temp.getNext(); 
+        }
+        return true;
+    }
+    
+    public void Reverse() // reverses the elements
+    {
+        if ( isEmpty() || top.getNext() == null) // if there is no elements, or one element
+            return;
+            
+        node pre = null;
+        node cur = top;
+        node temp = top.getNext();
+        
+        while (cur != null) // reverses the fields "next" 
+        {
+            cur.setNext(pre); 
+            pre = cur;
+            cur = temp;
+            if (temp != null)
+                temp = temp.getNext();
+        }
+        
+        top = pre;
+    }
+    
+    public node search (int d) // the searching function
+    {
+        node temp = top; // let temp equal the first element of the list 
+        while (temp != null) 
+        {
+            if (temp.getId() == d) // comparing the id in the element with the one we're searching for
+            {
+                return temp; // and then return and that will end the loop
+            }
+            temp = temp.getNext(); // if we didn't find, let temp equal the next element
+        }
+        return temp;
+    }
+    
+    public void modify (int d) // modifies an element
+    {
+        node temp = search(d);
+        if (temp == null) {
+            System.out.println("\nNot found");
+            return;
+        }
+        Scanner sc = new Scanner(System.in);
+        String n; double s; 
+        System.out.print("Enter new name & salary: " );
+        n = sc.next();
+        s = sc.nextDouble();
+        
+        temp.setName(n);
+        temp.setSalary(s);
+    }
+    
+    public void mean ()
+    {
+        double sum = 0; 
+        int n = 0;
+        double avg;
+        node temp = top;
+        while (temp != null)
+        {
+            sum += temp.getSalary();
+            n++;
+            
+            temp = temp.getNext();
+        }
+        if ( isEmpty() )
+            System.out.print("No elements");
+        else 
+        {
+            avg = sum / n;
+            System.out.println("\nthe mean of the salaries are: " + avg);
+        }
+    }
+    
+    public void min ()
+    {
+        if (isEmpty()) { // if there is no elements
+            System.out.println("No elements");
+            return;
+        }
+        System.out.println("\nPrinting the element with the minimum salary: ");
+        if (top.getNext() == null) { // if there only one element
+            top.printData();
+            return;
+        }
+            
+        node min = top; // set min to the first element
+        node cur = top.getNext();
+        
+        while (cur != null)
+        {
+            if (min.getSalary() > cur.getSalary() ) // compare min to the next element
+                min = cur;
+            
+            cur = cur.getNext(); // set cur to the next element 
+        }
+        min.printData(); // print the min
+    }
+    
+    public void max ()
+    {
+        if (isEmpty()) { // if there is no elements
+            System.out.println("No elements");
+            return;
+        }
+        System.out.println("\nPrinting the element with the maximum salary: ");
+        if (top.getNext() == null) { // if there only one element
+            top.printData();
+            return;
+        }
+        
+        node max = top; // set max to the first element
+        node cur = top.getNext();
+        
+        while (cur != null)
+        {
+            if (max.getSalary() < cur.getSalary() ) // compare max to the next element
+                max = cur;
+            
+            cur = cur.getNext(); // set cur to the next element 
+        }
+        
+        max.printData(); // print the max
+    }
+}
+
+public class Main
+{
+	public static void main(String[] args) 
+	{
+	    Scanner sc = new Scanner(System.in);
+		linkedStacks s = new linkedStacks ();
+		int d; String n; double sal; 
+
+		s.push(47, "a", 700);
+		s.push(46, "m", 770);
+		s.push(45, "k", 780);
+		s.push(45, "k", 780);
+		s.push(50, "q", 780);
+		s.pop();
+		s.pop();
+		s.printNormal();
+		
+		System.out.println("Printing in normal order:");
+		s.printNormal();
+		
+		System.out.println("\nPrinting in reverse order:");
+		s.printReverse();
+		System.out.println();
+		
+		boolean check = s.isSorted();
+		if (check == true)
+		    System.out.println("The list is sorted\n");
+		else
+		   System.out.println("The list is not sorted\n");
+		   
+		node temp = s.search(47);
+		if (temp == null)
+		    System.out.println("Not found\n");
+		else
+		    System.out.println("Found\n");
+		
+		s.modify(46);
+		s.modify(47);
+		System.out.println("\nPrinting after modifying: ");
+		s.printNormal();
+		System.out.println();
+		
+		s.Reverse();
+		System.out.println("Printing the reversed list: ");
+		s.printNormal();
+	    
+	  s.mean();
+	  s.min();
+	  s.max();
+	    
+	  
+		
+	}
+}
+
+
